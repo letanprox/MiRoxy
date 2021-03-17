@@ -13,7 +13,7 @@ var URL = require('url').URL;
 
 http.createServer(function (req, response) {
 
-    if (cors(request, response)) return
+    if (cors(req, response)) return
 
 MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db) {
   if (err) throw err;
