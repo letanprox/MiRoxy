@@ -5,7 +5,6 @@ const fetch = require("node-fetch");
 const {google} = require('googleapis');
 const readline = require('readline');
 
-const cors = require('http-cors') // use default options
 const cors = require('http-cors').setup({origin:'xemtua.xyz'}) 
 
 var MongoClient = require('mongodb').MongoClient;
