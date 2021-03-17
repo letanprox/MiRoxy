@@ -2,7 +2,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "googleapis": "^67.1.1",
+    "googleapis": "^39.2.0",
     "mongodb": "^3.6.5",
     "node-fetch": "^2.6.1"
   }

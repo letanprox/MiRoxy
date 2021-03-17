@@ -1,36 +1,26 @@
 const http = require("http");
-const path = require("path");
 const fs = require("fs");
-const fetch = require("node-fetch");
 const {google} = require('googleapis');
-const readline = require('readline');
-
-const express = require('express');
-var Cors = require('cors');
-const app = express()
-const port = 80;
-
-app.use(Cors({ origin: 'cuongonepiece.com' }));
-
 
 var MongoClient = require('mongodb').MongoClient;
 var urli = "mongodb://localhost:27017/";
 var URL = require('url').URL;
 
-app.get('/onepiece',(req, response) => {
+http.createServer(function (req, response) {
 MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db) {
   if (err) throw err;
 
   let dbo = await db.db("aidb");
   dbo = await dbo.collection("danh_sach_drivetemp");
 
-  let nameFile = String(req.query.file) ;
+  let nameFile = String(req.url).replace('/', '').replace(' ','');
   let listnum = nameFile.split("_");
   let nameFolder = nameFile.replace(String(String(listnum[listnum.length - 1])), '') ;
 
   if (!fs.existsSync(nameFolder)){
     fs.mkdirSync(nameFolder);
   }
+
 
   let query = { name:nameFile};
   let select = await dbo.find(query).toArray();
@@ -81,6 +71,7 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
 var dest = fs.createWriteStream( nameFolder + '/' + nameId);
 
     drive.files.get({fileId: fileId, alt: 'media'}, {responseType: 'stream'},
+   
     function(err, res){
         res.data.on('end', async () => {
             dbo = await db.db("aidb");
@@ -107,13 +98,11 @@ var dest = fs.createWriteStream( nameFolder + '/' + nameId);
 );
 
   }
-});
- 
+
 });
 
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
-  })
+}).listen(80);
+
 
 
 
@@ -126,6 +115,7 @@ let caculateDay = (day)=>{
     time = Math.abs(((date2.getTime() - date1.getTime())/1000));
     return Math.floor(time / (60));                  
 }
+
 let getCurrentTime = ()=>{
     var today = new Date();
     var date = today.getFullYear()+'/'+(today.getMonth()+1)+'/'+today.getDate();
