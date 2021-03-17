@@ -5,17 +5,16 @@ const fetch = require("node-fetch");
 const {google} = require('googleapis');
 const readline = require('readline');
 
+const cors = require('http-cors') // use default options
+const cors = require('http-cors').setup({origin:'xemtua.xyz'}) 
+
 var MongoClient = require('mongodb').MongoClient;
 var urli = "mongodb://localhost:27017/";
 var URL = require('url').URL;
 
 http.createServer(function (req, response) {
 
-    console.log(req.hostname, req.headers.host)
-    
-    response.header('Access-Control-Allow-Origin', 'example.com');
-    response.header('Access-Control-Allow-Methods', 'GET');
-    response.header('Access-Control-Allow-Headers', 'Content-Type');
+    if (cors(request, response)) return
 
 MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db) {
   if (err) throw err;
@@ -107,6 +106,7 @@ var dest = fs.createWriteStream( nameFolder + '/' + nameId);
 
   }
 });
+ 
 }).listen(80);
 
 
