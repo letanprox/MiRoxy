@@ -12,7 +12,7 @@ const port = 80;
 
 
 var corsOptions = {
-    origin: 'http://cuongonepiece.com',
+    origin: 'http://xemtua.xyz',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
   }
 
