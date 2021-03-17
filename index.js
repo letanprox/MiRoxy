@@ -10,6 +10,13 @@ var urli = "mongodb://localhost:27017/";
 var URL = require('url').URL;
 
 http.createServer(function (req, response) {
+
+    const headers = {
+        'Access-Control-Allow-Origin': 'example.com',
+      };
+    
+
+
 MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db) {
   if (err) throw err;
 
