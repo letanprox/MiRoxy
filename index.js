@@ -11,9 +11,7 @@ var URL = require('url').URL;
 
 http.createServer(function (req, response) {
 
-    const headers = {
-        'Access-Control-Allow-Origin': 'example.com',
-      };
+    console.log(request.hostname, request.headers.host)
     
 
 
