@@ -10,7 +10,7 @@ var cors = require('cors');
 const app = express()
 const port = 80;
 
-var whitelist = ['http://cuongonepiece.com']
+var whitelist = ['http://cuongonepiece.com', 'http://xemtua.xyz']
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
