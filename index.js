@@ -6,6 +6,8 @@ var MongoClient = require('mongodb').MongoClient;
 var urli = "mongodb://localhost:27017/";
 var URL = require('url').URL;
 
+let keysetdomain = "chuaconguoiyeu";
+
 http.createServer(function (req, response) {
 MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db) {
   if (err) throw err;
@@ -13,14 +15,19 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
   let dbo = await db.db("aidb");
   dbo = await dbo.collection("danh_sach_drivetemp");
 
-  let nameFile = String(req.url).replace('/', '').replace(' ','');
+  let firstrl = String(String(req.url).replace('/', '').replace(' ','')).split('/');
+
+  let nameFile = String(firstrl[0]);
+  let keytemp = String(firstrl[1]);
+
+  if(keytemp === keysetdomain){
+  
   let listnum = nameFile.split("_");
   let nameFolder = nameFile.replace(String(String(listnum[listnum.length - 1])), '') ;
 
   if (!fs.existsSync(nameFolder)){
     fs.mkdirSync(nameFolder);
   }
-
 
   let query = { name:nameFile};
   let select = await dbo.find(query).toArray();
@@ -98,7 +105,10 @@ var dest = fs.createWriteStream( nameFolder + '/' + nameId);
 );
 
   }
-
+  }else{
+    response.write('Hello World!'); //write a response to the client
+    response.end();
+  }
 });
 
 }).listen(80);
