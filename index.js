@@ -11,7 +11,7 @@ var URL = require('url').URL;
 
 http.createServer(function (req, response) {
 
-    console.log(request.hostname, request.headers.host)
+    console.log(req.hostname, req.headers.host)
     
 
 
