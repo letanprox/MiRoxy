@@ -10,25 +10,29 @@ var cors = require('cors');
 const app = express()
 const port = 80;
 
-
+var whitelist = ['http://cuongonepiece.com']
 var corsOptions = {
-    origin: 'http://xemtua.xyz',
-    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
   }
-
+}
 
 var MongoClient = require('mongodb').MongoClient;
 var urli = "mongodb://localhost:27017/";
 var URL = require('url').URL;
 
-app.use(cors(corsOptions) , (req, response) => {
+app.get('/' ,  cors(corsOptions) ,(req, response) => {
 MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db) {
   if (err) throw err;
 
   let dbo = await db.db("aidb");
   dbo = await dbo.collection("danh_sach_drivetemp");
 
-  let nameFile = String(req.url).replace('/', '').replace(' ','');
+  let nameFile = String(req.query.file) ;
   let listnum = nameFile.split("_");
   let nameFolder = nameFile.replace(String(String(listnum[listnum.length - 1])), '') ;
 
