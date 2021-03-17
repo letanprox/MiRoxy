@@ -5,16 +5,29 @@ const fetch = require("node-fetch");
 const {google} = require('googleapis');
 const readline = require('readline');
 
-const cors = require('http-cors').setup({origin:'cuongonepiece.com'}) 
+const express = require('express');
+var cors = require('cors');
+const app = express()
+const port = 80;
+
+
+var whitelist = ['http://cuongonepiece.com']
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+
 
 var MongoClient = require('mongodb').MongoClient;
 var urli = "mongodb://localhost:27017/";
 var URL = require('url').URL;
 
-http.createServer(function (req, response) {
-
-    if (cors(req, response)) return
-
+app.use(cors(corsOptions) , (req, response) => {
 MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db) {
   if (err) throw err;
 
@@ -106,7 +119,11 @@ var dest = fs.createWriteStream( nameFolder + '/' + nameId);
   }
 });
  
-}).listen(80);
+});
+
+app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`)
+  })
 
 
 
