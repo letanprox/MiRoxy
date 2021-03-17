@@ -13,7 +13,9 @@ http.createServer(function (req, response) {
 
     console.log(req.hostname, req.headers.host)
     
-
+    response.header('Access-Control-Allow-Origin', 'example.com');
+    response.header('Access-Control-Allow-Methods', 'GET');
+    response.header('Access-Control-Allow-Headers', 'Content-Type');
 
 MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db) {
   if (err) throw err;
