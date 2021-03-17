@@ -6,26 +6,18 @@ const {google} = require('googleapis');
 const readline = require('readline');
 
 const express = require('express');
-var cors = require('cors');
+var Cors = require('cors');
 const app = express()
 const port = 80;
 
-var whitelist = ['cuongonepiece.com', 'http://xemtua.xyz', 'http://localhost']
-var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1 || !origin) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
+app.use(Cors({ origin: 'cuongonepiece.com' }));
+
 
 var MongoClient = require('mongodb').MongoClient;
 var urli = "mongodb://localhost:27017/";
 var URL = require('url').URL;
 
-app.get('/' ,  cors(corsOptions) ,(req, response) => {
+app.get('/onepiece',(req, response) => {
 MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db) {
   if (err) throw err;
 
