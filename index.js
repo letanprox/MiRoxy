@@ -5,7 +5,7 @@ const fetch = require("node-fetch");
 const {google} = require('googleapis');
 const readline = require('readline');
 
-const cors = require('http-cors').setup({origin:'xemtua.xyz'}) 
+const cors = require('http-cors').setup({origin:'cuongonepiece.com'}) 
 
 var MongoClient = require('mongodb').MongoClient;
 var urli = "mongodb://localhost:27017/";
