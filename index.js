@@ -10,10 +10,10 @@ var cors = require('cors');
 const app = express()
 const port = 80;
 
-var whitelist = ['http://cuongonepiece.com', 'http://xemtua.xyz']
+var whitelist = ['http://cuongonepiece.com', 'http://xemtua.xyz', 'http://localhost']
 var corsOptions = {
   origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
       callback(null, true)
     } else {
       callback(new Error('Not allowed by CORS'))
