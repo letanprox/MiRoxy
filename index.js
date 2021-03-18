@@ -78,12 +78,12 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
 
       // response.setHeader('Content-Type', 'application/json')
       // response.setHeader("Access-Control-Allow-Origin", "*")
-  // response.writeHead(200, {"Access-Control-Allow-Origin": "*", 'Content-Type': 'video/mp2t'});
+
+  let chunck;
 
 var dest = fs.createWriteStream( nameFolder + '/' + nameId);
 
     drive.files.get({fileId: fileId, alt: 'media'}, {responseType: 'stream'},
-   
     function(err, res){
         res.data.on('end', async () => {
             dbo = await db.db("aidb");
@@ -93,22 +93,16 @@ var dest = fs.createWriteStream( nameFolder + '/' + nameId);
                 {$set: { direct: String(nameFolder + '/' + nameId) ,  thoi_gian: getCurrentTime()}},
                 { upsert: true }
               )
-        })
-        .on('error', err => {
-            console.log('Error', err);
-        }).on('response', responsexx => {
-          response.setHeader('Content-Type', 'application/force-download');
-          response.setHeader('Access-Control-Allow-Origin', '*');
-          responsexx.pipe(response);
-        });
 
-
-        res.data.on('end', () => {
+            response.writeHead(200, {"Access-Control-Allow-Origin": "*", 'Content-Type': 'video/mp2t'});
+            response.end(chunck,'utf8')
         })
-        .on('error', err => {
-            console.log('Error', err);
+        .on('data', data => {
+            chunck = chunck + data;
         })
-        .pipe(dest);
+        on('error', err => {
+          console.log('Error', err);
+        }).pipe(dest);
     }
 );
 
