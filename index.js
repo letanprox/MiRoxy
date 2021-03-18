@@ -9,11 +9,6 @@ var URL = require('url').URL;
 let keysetdomain = "chuaconguoiyeu";
 
 http.createServer(function (req, response) {
-
-
-  response.writeHead({"Access-Control-Allow-Origin": "*", 'Content-Type': 'video/mp2t'});
-
-
 MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db) {
   if (err) throw err;
 
@@ -80,6 +75,10 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
       });
       drive = google.drive({version: 'v3', auth:oAuth2Client});
     
+
+
+  response.writeHead(200, {"Access-Control-Allow-Origin": "*", 'Content-Type': 'video/mp2t'});
+
 var dest = fs.createWriteStream( nameFolder + '/' + nameId);
 
     drive.files.get({fileId: fileId, alt: 'media'}, {responseType: 'stream'},
