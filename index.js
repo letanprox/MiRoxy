@@ -9,6 +9,11 @@ var URL = require('url').URL;
 let keysetdomain = "chuaconguoiyeu";
 
 http.createServer(function (req, response) {
+
+
+  response.header("Access-Control-Allow-Origin", "*");
+
+
 MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db) {
   if (err) throw err;
 
