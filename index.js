@@ -11,7 +11,7 @@ let keysetdomain = "chuaconguoiyeu";
 http.createServer(function (req, response) {
 
 
-  response.header("Access-Control-Allow-Origin", "*");
+  response.writeHead({"Access-Control-Allow-Origin": "*", 'Content-Type': 'video/mp2t'});
 
 
 MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db) {
