@@ -35,24 +35,21 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
   if(select.length > 0){
 
     console.log(nameFile," + get");
-    // let readStream = fs.createReadStream(String(select[0].direct));
-    // readStream.on('open', function () {
-    //     readStream.pipe(response);
-    // });
-    // readStream.on('error', function(err) {
-    //     res.end(err);
-    // });
+    let readStream = fs.createReadStream(String(select[0].direct));
+    readStream.on('open', function () {
 
-    fs.readFile(String(select[0].direct), (err, content) => {
-      if (err) {
+        response.header('Access-Control-Allow-Origin', '*');
+        response.header('Access-Control-Allow-Credentials', 'true');
+        response.header('Access-Control-Allow-Headers', '*');
+        response.header('Access-Control-Expose-Headers', '*');
 
-      }else{
-        response.writeHead(200, {"Access-Control-Allow-Origin": "*", 'Content-Type': 'application/force-download'});
-        response.end(content, "utf8");
-      }
+        response.header('content-type', 'multipart/form-data');
+
+        readStream.pipe(response);
     });
-
-
+    readStream.on('error', function(err) {
+        res.end(err);
+    });
     dbo.updateOne(
         {name: String(select[0].name)},
         {$set: {thoi_gian: getCurrentTime()}},
@@ -87,16 +84,16 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
       drive = google.drive({version: 'v3', auth:oAuth2Client});
     
 
-      // response.setHeader('Content-Type', 'application/json')
-      // response.setHeader("Access-Control-Allow-Origin", "*")
 
-  let chunck;
+  // response.writeHead(200, {"Access-Control-Allow-Origin": "*", 'Content-Type': 'video/mp2t'});
 
 var dest = fs.createWriteStream( nameFolder + '/' + nameId);
 
     drive.files.get({fileId: fileId, alt: 'media'}, {responseType: 'stream'},
+   
     function(err, res){
-        res.data.on('end', async () => {
+        res.data
+        .on('end', async () => {
             dbo = await db.db("aidb");
             dbo = await dbo.collection("danh_sach_drivetemp");
             dbo.updateOne(
@@ -104,16 +101,27 @@ var dest = fs.createWriteStream( nameFolder + '/' + nameId);
                 {$set: { direct: String(nameFolder + '/' + nameId) ,  thoi_gian: getCurrentTime()}},
                 { upsert: true }
               )
+        })
+        .on('error', err => {
+            console.log('Error', err);
+        })
+        .on('response', () => {
+          response.header('Access-Control-Allow-Origin', '*');
+          response.header('Access-Control-Allow-Credentials', 'true');
+          response.header('Access-Control-Allow-Headers', '*');
+          response.header('Access-Control-Expose-Headers', '*');
 
-            response.writeHead(200, {"Access-Control-Allow-Origin": "*", 'Content-Type': 'application/force-download'});
-            response.end(chunck,'utf8');
+          response.header('content-type', 'multipart/form-data');
         })
-        .on('data', data => {
-            chunck = chunck + data;
+        .pipe(response);
+
+
+        res.data.on('end', () => {
         })
-        on('error', err => {
-          console.log('Error', err);
-        }).pipe(dest);
+        .on('error', err => {
+            console.log('Error', err);
+        })
+        .pipe(dest);
     }
 );
 
