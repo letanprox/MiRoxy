@@ -20,7 +20,7 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
   let nameFile = String(firstrl[0]);
   let keytemp = String(firstrl[1]);
 
-  if(true){
+  if(keytemp === keysetdomain){
   
   let listnum = nameFile.split("_");
   let nameFolder = nameFile.replace(String(String(listnum[listnum.length - 1])), '') ;
@@ -34,17 +34,16 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
 
   if(select.length > 0){
 
+    response.header('Access-Control-Allow-Origin', '*');
+    response.header('Access-Control-Allow-Credentials', 'true');
+    response.header('Access-Control-Allow-Headers', '*');
+    response.header('Access-Control-Expose-Headers', '*');
+
+    response.header('content-type', 'multipart/form-data');
+
     console.log(nameFile," + get");
     let readStream = fs.createReadStream(String(select[0].direct));
     readStream.on('open', function () {
-
-        response.header('Access-Control-Allow-Origin', '*');
-        response.header('Access-Control-Allow-Credentials', 'true');
-        response.header('Access-Control-Allow-Headers', '*');
-        response.header('Access-Control-Expose-Headers', '*');
-
-        response.header('content-type', 'multipart/form-data');
-
         readStream.pipe(response);
     });
     readStream.on('error', function(err) {
