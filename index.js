@@ -34,21 +34,32 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
 
   if(select.length > 0){
 
-    response.header('Access-Control-Allow-Origin', '*');
-    response.header('Access-Control-Allow-Credentials', 'true');
-    response.header('Access-Control-Allow-Headers', '*');
-    response.header('Access-Control-Expose-Headers', '*');
+    // response.header('Access-Control-Allow-Origin', '*');
+    // response.header('Access-Control-Allow-Credentials', 'true');
+    // response.header('Access-Control-Allow-Headers', '*');
+    // response.header('Access-Control-Expose-Headers', '*');
 
-    response.header('content-type', 'multipart/form-data');
+    // response.header('content-type', 'multipart/form-data');
 
     console.log(nameFile," + get");
-    let readStream = fs.createReadStream(String(select[0].direct));
-    readStream.on('open', function () {
-        readStream.pipe(response);
-    });
-    readStream.on('error', function(err) {
-        res.end(err);
-    });
+    // let readStream = fs.createReadStream(String(select[0].direct));
+    // readStream.on('open', function () {
+    //     readStream.pipe(response);
+    // });
+    // readStream.on('error', function(err) {
+    //     res.end(err);
+    // });
+
+    res.writeHead( 200, { 
+      'Content-Type': 'multipart/form-data' ,
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': 'true',
+      'Access-Control-Allow-Headers': '*',
+      'Access-Control-Expose-Headers': '*',
+    } );
+    fs.createReadStream(String(select[0].direct)).pipe(response);
+
+
     dbo.updateOne(
         {name: String(select[0].name)},
         {$set: {thoi_gian: getCurrentTime()}},
