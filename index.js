@@ -76,8 +76,8 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
       drive = google.drive({version: 'v3', auth:oAuth2Client});
     
 
-      response.setHeader('Content-Type', 'application/json')
-      response.setHeader("Access-Control-Allow-Origin", "*")
+      // response.setHeader('Content-Type', 'application/json')
+      // response.setHeader("Access-Control-Allow-Origin", "*")
   // response.writeHead(200, {"Access-Control-Allow-Origin": "*", 'Content-Type': 'video/mp2t'});
 
 var dest = fs.createWriteStream( nameFolder + '/' + nameId);
@@ -96,8 +96,11 @@ var dest = fs.createWriteStream( nameFolder + '/' + nameId);
         })
         .on('error', err => {
             console.log('Error', err);
-        })
-        .pipe(response);
+        }).on('response', responsexx => {
+          response.setHeader('Content-Type', 'application/force-download');
+          response.setHeader('Access-Control-Allow-Origin', '*');
+          responsexx.pipe(response);
+        });
 
 
         res.data.on('end', () => {
