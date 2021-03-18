@@ -50,7 +50,7 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
     //     res.end(err);
     // });
 
-    res.writeHead( 200, { 
+    response.writeHead( 200, { 
       'Content-Type': 'multipart/form-data' ,
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': 'true',
