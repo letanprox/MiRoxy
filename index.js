@@ -20,7 +20,7 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
   let nameFile = String(firstrl[0]);
   let keytemp = String(firstrl[1]);
 
-  if(keytemp === keysetdomain){
+  if(true){
   
   let listnum = nameFile.split("_");
   let nameFolder = nameFile.replace(String(String(listnum[listnum.length - 1])), '') ;
