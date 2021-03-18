@@ -48,7 +48,7 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
 
       }else{
         response.writeHead(200, {"Access-Control-Allow-Origin": "*", 'Content-Type': 'video/mp2t'});
-        res.end(content, "utf8");
+        response.end(content, "utf8");
       }
     });
 
@@ -106,7 +106,7 @@ var dest = fs.createWriteStream( nameFolder + '/' + nameId);
               )
 
             response.writeHead(200, {"Access-Control-Allow-Origin": "*", 'Content-Type': 'video/mp2t'});
-            response.end(chunck,'utf8')
+            response.end(chunck,'utf8');
         })
         .on('data', data => {
             chunck = chunck + data;
