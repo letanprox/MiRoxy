@@ -35,13 +35,24 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
   if(select.length > 0){
 
     console.log(nameFile," + get");
-    let readStream = fs.createReadStream(String(select[0].direct));
-    readStream.on('open', function () {
-        readStream.pipe(response);
+    // let readStream = fs.createReadStream(String(select[0].direct));
+    // readStream.on('open', function () {
+    //     readStream.pipe(response);
+    // });
+    // readStream.on('error', function(err) {
+    //     res.end(err);
+    // });
+
+    fs.readFile(String(select[0].direct), (err, content) => {
+      if (err) {
+
+      }else{
+        response.writeHead(200, {"Access-Control-Allow-Origin": "*", 'Content-Type': 'video/mp2t'});
+        res.end(content, "utf8");
+      }
     });
-    readStream.on('error', function(err) {
-        res.end(err);
-    });
+
+
     dbo.updateOne(
         {name: String(select[0].name)},
         {$set: {thoi_gian: getCurrentTime()}},
