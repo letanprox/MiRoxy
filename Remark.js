@@ -35,6 +35,18 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
             }
         });
     });
+
+    fs.readdir(__dirname + '/TempFile/', function (err, folder_) {
+        if (err) throw err;
+            fs.readdir(String(__dirname + '/TempFile/' + folder_), function(err, files) {
+                if (err) {
+                } else {
+                   if (!files.length) {
+                      fs.rmdirSync(String(dirx), { recursive: true });
+                   }
+                }
+            });
+    });
 });
 }
 
