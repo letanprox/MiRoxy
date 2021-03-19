@@ -36,16 +36,21 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
         });
     });
 
-    fs.readdir(__dirname + '/TempFile/', function (err, folder_) {
+    fs.readdir('./TempFile/', function (err, folder_) {
         if (err) throw err;
-            fs.readdir(String(__dirname + '/TempFile/' + folder_), function(err, files) {
+        else {
+            folder_.map(function (folder__) {
+            let Pathx = './TempFile/' + folder__;
+            fs.readdir(String(Pathx), function(err, files) {
                 if (err) {
                 } else {
                    if (!files.length) {
-                      fs.rmdirSync(String(dirx), { recursive: true });
+                      fs.rmdirSync(String('./TempFile/' + folder__), { recursive: true });
                    }
                 }
             });
+            });
+        }
     });
 });
 }
