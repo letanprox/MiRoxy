@@ -4,7 +4,6 @@ const {google} = require('googleapis');
 
 var MongoClient = require('mongodb').MongoClient;
 var urli = "mongodb://localhost:27017/";
-var URL = require('url').URL;
 
 let keysetdomain = "chuaconguoiyeu";
 
@@ -12,43 +11,27 @@ http.createServer(function (req, response) {
 MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db) {
   if (err) throw err;
 
-  let dbo = await db.db("aidb");
-  dbo = await dbo.collection("danh_sach_drivetemp");
-
   let firstrl = String(String(req.url).replace('/', '').replace(' ','')).split('/');
-
-  let nameFile = String(firstrl[0]);
   let keytemp = String(firstrl[1]);
+  let nameFile = String(firstrl[0]);
 
-  if(keytemp === keysetdomain){
+if(keytemp === keysetdomain){
   
   let listnum = nameFile.split("_");
-  let nameFolder = nameFile.replace(String(String(listnum[listnum.length - 1])), '') ;
-
+  let nameFolder = 'TempFile/' + nameFile.replace(String(String(listnum[listnum.length - 1])), '');
+  
   if (!fs.existsSync(nameFolder)){
     fs.mkdirSync(nameFolder);
   }
 
-  let query = { name:nameFile};
+  let dbo = await db.db("aidb");
+  dbo = await dbo.collection("danh_sach_drivetemp");
+  let query = {name:nameFile};
   let select = await dbo.find(query).toArray();
 
   if(select.length > 0){
 
-    // response.header('Access-Control-Allow-Origin', '*');
-    // response.header('Access-Control-Allow-Credentials', 'true');
-    // response.header('Access-Control-Allow-Headers', '*');
-    // response.header('Access-Control-Expose-Headers', '*');
-
-    // response.header('content-type', 'multipart/form-data');
-
     console.log(nameFile," + get");
-    // let readStream = fs.createReadStream(String(select[0].direct));
-    // readStream.on('open', function () {
-    //     readStream.pipe(response);
-    // });
-    // readStream.on('error', function(err) {
-    //     res.end(err);
-    // });
 
     response.writeHead( 200, { 
       'Content-Type': 'multipart/form-data' ,
@@ -59,7 +42,6 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
     } );
     fs.createReadStream(String(select[0].direct)).pipe(response);
 
-
     dbo.updateOne(
         {name: String(select[0].name)},
         {$set: {thoi_gian: getCurrentTime()}},
@@ -68,39 +50,33 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
 
   }else{
 
-    console.log(nameFile," + create")
+    console.log(nameFile," + create");
 
   dbo = await db.db("aidb");
   dbo = await dbo.collection("danh_sach_drivelist");
-  let query = { name:nameFile};
-  let select = await dbo.find(query).toArray();
-  select = JSON.parse(JSON.stringify(select[0]));
+      let query = { name:nameFile};
+      let select = await dbo.find(query).toArray();
+      select = JSON.parse(JSON.stringify(select[0]));
+      let fileId = String(select.id);
+      let nameId = String(select.name);
 
-  var fileId = String(select.id);
-  var nameId = String(select.name);
   dbo = await db.db("aidb");
   dbo = await dbo.collection("danh_sach_driveapi");
-  let drive;
       index = Number(select.index);
-       query = { index: index};
-     select = await dbo.find(query).toArray();
+      query = { index: index};
+      select = await dbo.find(query).toArray();
       select = JSON.parse(JSON.stringify(select[0]));
       access_token = select.access_token; 
-      let oAuth2Client = new google.auth.OAuth2();
+
+  let oAuth2Client = new google.auth.OAuth2();
       oAuth2Client.setCredentials({
         access_token:access_token,
         scope: 'https://www.googleapis.com/auth/drive',
       });
-      drive = google.drive({version: 'v3', auth:oAuth2Client});
-    
 
-
-  // response.writeHead(200, {"Access-Control-Allow-Origin": "*", 'Content-Type': 'video/mp2t'});
-
-var dest = fs.createWriteStream( nameFolder + '/' + nameId);
-
+    let dest = fs.createWriteStream( nameFolder + '/' + nameId);
+    let drive = google.drive({version: 'v3', auth:oAuth2Client});
     drive.files.get({fileId: fileId, alt: 'media'}, {responseType: 'stream'},
-   
     function(err, res){
         res.data
         .on('end', async () => {
@@ -116,46 +92,27 @@ var dest = fs.createWriteStream( nameFolder + '/' + nameId);
             console.log('Error', err);
         })
         .on('response', () => {
+          response.header('content-type', 'multipart/form-data');
           response.header('Access-Control-Allow-Origin', '*');
           response.header('Access-Control-Allow-Credentials', 'true');
           response.header('Access-Control-Allow-Headers', '*');
           response.header('Access-Control-Expose-Headers', '*');
-
-          response.header('content-type', 'multipart/form-data');
         })
         .pipe(response);
 
-
-        res.data.on('end', () => {
-        })
-        .on('error', err => {
-            console.log('Error', err);
-        })
-        .pipe(dest);
+        res.data.pipe(dest);
     }
 );
 
   }
-  }else{
-    response.write('Hello World!'); //write a response to the client
-    response.end();
+
+}else{
+  response.write('can key deload'); //write a response to the client
+  response.end();
   }
 });
 
 }).listen(80);
-
-
-
-
-let caculateDay = (day)=>{
-    date1 = new Date(day);
-    var today = new Date();
-    var date = today.getFullYear()+'/'+(today.getMonth()+1)+'/'+today.getDate();
-    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    date2 =  new Date(date+' '+time);    
-    time = Math.abs(((date2.getTime() - date1.getTime())/1000));
-    return Math.floor(time / (60));                  
-}
 
 let getCurrentTime = ()=>{
     var today = new Date();
