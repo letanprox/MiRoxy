@@ -12,13 +12,21 @@ http.createServer(async function (req, response) {
   let firstrl = String(String(req.url).replace('/', '').replace(' ','')).split('/');
   let keytemp = String(firstrl[1]);
   let nameFile = String(firstrl[0]);
+  let ishavefile = 0;
+  let ischose = 0;
 
 if(keytemp === keysetdomain){
-  
+
   let listnum = nameFile.split("_");
-  let nameFolder = 'TempFile/' + nameFile.replace(String(String(listnum[listnum.length - 1])), '');
-  if (!fs.existsSync(nameFolder)) fs.mkdirSync(nameFolder);
-  
+  let nameFolder = 'TempFile/' + nameFile.replace(String(listnum[listnum.length - 1]), '');
+  if (!fs.existsSync(nameFolder)){
+    fs.mkdirSync(nameFolder);
+    ishavefile = 0;
+  }else{
+    if (!fs.existsSync(nameFolder + '/' + nameFile)) ishavefile = 0;
+    else ishavefile = 1;
+  }
+
   let dbo = await db.db("aidb");
   dbo = await dbo.collection("danh_sach_drivetemp");
   let query = {name:nameFile};
@@ -28,7 +36,17 @@ if(keytemp === keysetdomain){
   let dest;
   let drive;
 
-  if(select.length > 0){
+  if((select.length > 0 && ishavefile == 0) || (select.length == 0 && ishavefile == 1)){
+    if(ishavefile == 1) fs.unlinkSync(nameFolder + '/' + nameFile);
+    dbo.deleteOne({name: nameFile});
+    ischose = 0;
+    console.log("error file");
+  }else{
+    if(select.length > 0) ischose = 1;
+    else ischose = 0;
+  }
+
+  if(ischose > 0){
     console.log(nameFile," + get");
     
     response.writeHead( 200, { 
