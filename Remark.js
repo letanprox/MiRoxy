@@ -4,7 +4,7 @@ var urli = "mongodb://localhost:27017/";
 const fetch = require("node-fetch");
 const fs = require("fs");
 
-let clock = 30;
+let clock = 300;
 let clocktime = 1;
 
 function clockTime(){
