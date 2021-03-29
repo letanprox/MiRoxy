@@ -40,6 +40,3 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
 });
 }
 clockTime();
-// setInterval(function() {
-//     clockTime();
-// }, 300000);

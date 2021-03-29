@@ -22,10 +22,13 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
     select.forEach(element => {
         if(Number(caculateDay(element.thoi_gian)) >= clock){
             dbo.deleteOne({name: element.name},)
-            fs.unlinkSync(element.direct);
+            if (fs.existsSync(element.direct)){ 
+                fs.unlinkSync(element.direct);
+            }
         }
 
         let dirx = String(element.direct).split('/')[0] + String(element.direct).split('/')[1]
+        if (fs.existsSync(dirx)){ 
         fs.readdir(String(dirx), function(err, files) {
             if (err) {
             } else {
@@ -34,6 +37,7 @@ MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db)
                }
             }
         });
+        }
     });
 
     fs.readdir('./TempFile/', function (err, folder_) {
