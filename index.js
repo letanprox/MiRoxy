@@ -9,7 +9,7 @@ let keysetdomain = "chuaconguoiyeu";
 let Iplist = {};
 let minut = 0;
 let senut = 0;
-let limitreq = 7;
+let limitreq = 14;
 let timerange = 7;
 
 const parseIp = (req) =>
