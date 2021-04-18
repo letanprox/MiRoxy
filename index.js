@@ -6,9 +6,40 @@ var MongoClient = require('mongodb').MongoClient;
 var urli = "mongodb://localhost:27017/";
 let keysetdomain = "chuaconguoiyeu";
 
+let Iplist = {};
+let countreq = 0;
+
+const parseIp = (req) =>
+    (typeof req.headers['x-forwarded-for'] === 'string'
+        && req.headers['x-forwarded-for'].split(',').shift())
+    || req.connection?.remoteAddress
+    || req.socket?.remoteAddress
+    || req.connection?.socket?.remoteAddress
+
 MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db) {
 http.createServer(async function (req, response) {
   if (err) throw err;
+
+  let allowip = false;
+  countreq = countreq + 1;
+  if(countreq == 50){
+    countreq = 0;
+    Iplist = {}
+  } 
+
+  if(Iplist.hasOwnProperty(String(parseIp(req)))){
+    if( Iplist[String(parseIp(req))] > Number(date_ob.getSeconds()) ){
+      allowip = true;
+      Iplist[String(parseIp(req))] = Number(Iplist[String(parseIp(req))]) + 0.5;
+    }else{
+      allowip = false;
+    }
+  }else{
+    Iplist[String(parseIp(req))] = Number(date_ob.getSeconds());
+  }
+
+if(allowip === true){
+
   let firstrl = String(String(req.url).replace('/', '').replace(' ','')).split('/');
   let keytemp = String(firstrl[1]);
   let nameFile = String(firstrl[0]);
@@ -37,7 +68,10 @@ if(keytemp === keysetdomain){
   let drive;
 
   if((select.length > 0 && ishavefile == 0) || (select.length == 0 && ishavefile == 1)){
-    if(ishavefile == 1) fs.unlinkSync(nameFolder + '/' + nameFile);
+    if(ishavefile == 1){
+      console.log("exist file nosql")
+      fs.unlinkSync(nameFolder + '/' + nameFile);
+    } 
     dbo.deleteOne({name: nameFile});
     ischose = 0;
     console.log("error file");
@@ -246,7 +280,11 @@ if(keytemp === keysetdomain){
 }else{
   response.write('can key deload'); //write a response to the client
   response.end();
-  }
+}
+}else{
+  response.write('to many request'); //write a response to the client
+  response.end();
+}
 }).listen(80);
 });
 
