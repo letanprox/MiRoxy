@@ -7,7 +7,10 @@ var urli = "mongodb://localhost:27017/";
 let keysetdomain = "chuaconguoiyeu";
 
 let Iplist = {};
-let countreq = 0;
+let minut = 0;
+let senut = 0;
+let limitreq = 10;
+let timerange = 20;
 
 const parseIp = (req) =>
     (typeof req.headers['x-forwarded-for'] === 'string'
@@ -19,25 +22,36 @@ const parseIp = (req) =>
 MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db) {
 http.createServer(async function (req, response) {
   if (err) throw err;
+
   let date_ob = new Date();
+  let currentminut = date_ob.getMinutes();
+  let currentsenut = date_ob.getSeconds();
+  if(minut == 0) minut = currentminut;
+  if(senut == 0) senut = currentsenut;
+
+  if(minut < currentminut){
+    minut = currentminut;
+    Iplist = {};
+  }else{
+    if((currentsenut - senut) >= timerange){
+      Iplist = {};
+    }
+  }
+
   let allowip = false;
-  countreq = countreq + 1;
-  if(countreq == 50){
-    countreq = 0;
-    Iplist = {}
-  } 
+
   let ipree = String(parseIp(req));
   if(Iplist.hasOwnProperty(ipree) ){
-    if( Number(Iplist[ipree]) < Number(date_ob.getSeconds()) ){
-      console.log( Number(Iplist[ipree]) , "sss" ,Number(date_ob.getSeconds()))
+    if(Number(Iplist[ipree]) < limitreq){
       allowip = true;
-      Iplist[ipree] = Number(Iplist[ipree]) + 0.1;
+      Iplist[ipree] = Number(Iplist[ipree]) + 1;
     }else{
       allowip = false;
       console.log("chan ip " + ipree)
     }
   }else{
-    Iplist[ipree] = Number(date_ob.getSeconds());
+    allowip = true;
+    Iplist[ipree] = 1;
   }
 
 if(allowip === true){
