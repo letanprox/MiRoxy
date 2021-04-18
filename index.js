@@ -9,15 +9,15 @@ let keysetdomain = "chuaconguoiyeu";
 let Iplist = {};
 let minut = 0;
 let senut = 0;
-let limitreq = 5;
-let timerange = 4;
+let limitreq = 7;
+let timerange = 5;
 
 const parseIp = (req) =>
-    (typeof req.headers['x-forwarded-for'] === 'string'
-        && req.headers['x-forwarded-for'].split(',').shift())
+    (typeof req.headers['x-forwarded-for'] === 'string' && req.headers['x-forwarded-for'].split(',').shift())
     || req.connection?.remoteAddress
     || req.socket?.remoteAddress
     || req.connection?.socket?.remoteAddress
+
 
 MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db) {
 http.createServer(async function (req, response) {
@@ -300,7 +300,8 @@ if(keytemp === keysetdomain){
   response.end();
 }
 }else{
-  response.write('to many request'); //write a response to the client
+  response.writeHead(100);
+  response.write('running'); //write a response to the client
   response.end();
 }
 }).listen(80);
