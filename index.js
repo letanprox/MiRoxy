@@ -31,9 +31,11 @@ http.createServer(async function (req, response) {
 
   if(minut < currentminut){
     minut = currentminut;
+    senut = currentsenut;
     Iplist = {};
   }else{
     if((currentsenut - senut) >= timerange){
+      minut = currentminut;
       senut = currentsenut;
       Iplist = {};
     }
