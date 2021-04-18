@@ -9,8 +9,8 @@ let keysetdomain = "chuaconguoiyeu";
 let Iplist = {};
 let minut = 0;
 let senut = 0;
-let limitreq = 7;
-let timerange = 5;
+let limitreq = 13;
+let timerange = 9;
 
 const parseIp = (req) =>
     (typeof req.headers['x-forwarded-for'] === 'string' && req.headers['x-forwarded-for'].split(',').shift())
@@ -296,6 +296,7 @@ if(keytemp === keysetdomain){
   }
 
 }else{
+  response.writeHead(401);
   response.write('can key deload'); //write a response to the client
   response.end();
 }
