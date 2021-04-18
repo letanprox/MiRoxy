@@ -29,7 +29,7 @@ http.createServer(async function (req, response) {
   let ipree = String(parseIp(req));
   if(Iplist.hasOwnProperty(ipree) ){
     if( Number(Iplist[ipree]) < Number(date_ob.getSeconds()) ){
-      console.log( Number(Iplist[ipree]) , "sss" ,Number(date_ob.getSeconds())
+      console.log( Number(Iplist[ipree]) , "sss" ,Number(date_ob.getSeconds()))
       allowip = true;
       Iplist[ipree] = Number(Iplist[ipree]) + 0.1;
     }else{
