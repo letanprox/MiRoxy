@@ -26,16 +26,17 @@ http.createServer(async function (req, response) {
     countreq = 0;
     Iplist = {}
   } 
-
-  if(Iplist.hasOwnProperty(String(parseIp(req)))){
-    if( Iplist[String(parseIp(req))] > Number(date_ob.getSeconds()) ){
+  let ipree = String(parseIp(req));
+  if(Iplist.hasOwnProperty(ipree) ){
+    if( Number(Iplist[ipree]) > Number(date_ob.getSeconds()) ){
       allowip = true;
-      Iplist[String(parseIp(req))] = Number(Iplist[String(parseIp(req))]) + 0.5;
+      Iplist[ipree] = Number(Iplist[ipree]) + 0.5;
     }else{
       allowip = false;
+      console.log("chan ip " + ipree)
     }
   }else{
-    Iplist[String(parseIp(req))] = Number(date_ob.getSeconds());
+    Iplist[ipree] = Number(date_ob.getSeconds());
   }
 
 if(allowip === true){
