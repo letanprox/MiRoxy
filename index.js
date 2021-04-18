@@ -9,8 +9,8 @@ let keysetdomain = "chuaconguoiyeu";
 let Iplist = {};
 let minut = 0;
 let senut = 0;
-let limitreq = 13;
-let timerange = 9;
+let limitreq = 9;
+let timerange = 7;
 
 const parseIp = (req) =>
     (typeof req.headers['x-forwarded-for'] === 'string' && req.headers['x-forwarded-for'].split(',').shift())
@@ -49,7 +49,7 @@ http.createServer(async function (req, response) {
       Iplist[ipree] = Number(Iplist[ipree]) + 1;
     }else{
       allowip = false;
-      console.log("chan ip " + ipree)
+      console.log("block ip: " + ipree)
     }
   }else{
     allowip = true;
@@ -87,12 +87,11 @@ if(keytemp === keysetdomain){
 
   if((select.length > 0 && ishavefile == 0) || (select.length == 0 && ishavefile == 1)){
     if(ishavefile == 1){
-      console.log("exist file nosql")
       fs.unlinkSync(nameFolder + '/' + nameFile);
     } 
     dbo.deleteOne({name: nameFile});
     ischose = 0;
-    console.log("error file");
+    console.log("lost file");
   }else{
     if(select.length > 0) ischose = 1;
     else ischose = 0;
