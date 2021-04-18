@@ -9,8 +9,8 @@ let keysetdomain = "chuaconguoiyeu";
 let Iplist = {};
 let minut = 0;
 let senut = 0;
-let limitreq = 7;
-let timerange = 5;
+let limitreq = 5;
+let timerange = 4;
 
 const parseIp = (req) =>
     (typeof req.headers['x-forwarded-for'] === 'string'
@@ -42,10 +42,9 @@ http.createServer(async function (req, response) {
   }
 
   let allowip = false;
-
   let ipree = String(parseIp(req));
   if(Iplist.hasOwnProperty(ipree) ){
-    if(Number(Iplist[ipree]) < limitreq){
+    if(Number(Iplist[ipree]) <= limitreq){
       allowip = true;
       Iplist[ipree] = Number(Iplist[ipree]) + 1;
     }else{
