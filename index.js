@@ -9,8 +9,8 @@ let keysetdomain = "chuaconguoiyeu";
 let Iplist = {};
 let minut = 0;
 let senut = 0;
-let limitreq = 30;
-let timerange = 20;
+let limitreq = 7;
+let timerange = 7;
 
 const parseIp = (req) =>
     (typeof req.headers['x-forwarded-for'] === 'string'
