@@ -28,9 +28,9 @@ http.createServer(async function (req, response) {
   } 
   let ipree = String(parseIp(req));
   if(Iplist.hasOwnProperty(ipree) ){
-    if( Number(Iplist[ipree]) > Number(date_ob.getSeconds()) ){
+    if( Number(Iplist[ipree]) < Number(date_ob.getSeconds()) ){
       allowip = true;
-      Iplist[ipree] = Number(Iplist[ipree]) + 0.1;
+      Iplist[ipree] = Number(Iplist[ipree]) + 0.5;
     }else{
       allowip = false;
       console.log("chan ip " + ipree)
