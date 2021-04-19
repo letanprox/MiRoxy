@@ -10,7 +10,7 @@ let Iplist = {};
 let minut = 0;
 let senut = 0;
 let limitreq = 10;
-let timerange = 5;
+let timerange = 7;
 
 const parseIp = (req) =>
     (typeof req.headers['x-forwarded-for'] === 'string' && req.headers['x-forwarded-for'].split(',').shift())
