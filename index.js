@@ -45,6 +45,7 @@ http.createServer(async function (req, response) {
   let ipree = String(parseIp(req));
   console.log(Iplist)
   if( Iplist.has(ipree) ){
+    console.log(Number(Iplist.get(ipree)))
     if(Number(Iplist.get(ipree)) <= limitreq){
       allowip = true;
       Iplist.set(ipree, Number(Iplist.get(ipree)) + 1);
