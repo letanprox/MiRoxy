@@ -9,7 +9,7 @@ let keysetdomain = "chuaconguoiyeu";
 MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db) {
 http.createServer(async function (req, response) {
   if (err) throw err;
-  
+
   let firstrl = String(String(req.url).replace('/', '').replace(' ','')).split('/');
   let keytemp = String(firstrl[1]);
   let nameFile = String(firstrl[0]);
@@ -50,7 +50,7 @@ if(keytemp === keysetdomain){
   }
 
   if(ischose > 0){
-    console.log(nameFile," + get");
+    console.log("\x1b[33m",nameFile," + get");
     
     response.writeHead( 200, { 
       'Content-Type': 'multipart/form-data' ,
@@ -86,7 +86,7 @@ if(keytemp === keysetdomain){
       }
 
       if(statsfile == 0){
-        console.log(nameFile," + getnextfile");
+        console.log("\x1b[31m",nameFile," + getnextfile");
         dbo = await db.db("aidb");
         dbo = await dbo.collection("danh_sach_drivelist");
           query = { name:nameId};
@@ -131,7 +131,7 @@ if(keytemp === keysetdomain){
     }
 
   }else{
-    console.log(nameFile," + create");
+    console.log("\x1b[31m",nameFile," + create");
 
     dbo = await db.db("aidb");
     dbo = await dbo.collection("danh_sach_drivelist");
