@@ -6,60 +6,10 @@ var MongoClient = require('mongodb').MongoClient;
 var urli = "mongodb://localhost:27017/";
 let keysetdomain = "chuaconguoiyeu";
 
-let Iplist = new Map();
-let minut = 0;
-let senut = 0;
-let limitreq = 10;
-let timerange = 7;
-
-const parseIp = (req) =>
-    (typeof req.headers['x-forwarded-for'] === 'string' && req.headers['x-forwarded-for'].split(',').shift())
-    || req.connection?.remoteAddress
-    || req.socket?.remoteAddress
-    || req.connection?.socket?.remoteAddress
-
-
 MongoClient.connect(urli , { useUnifiedTopology: true } ,async function(err, db) {
 http.createServer(async function (req, response) {
   if (err) throw err;
-
-  let date_ob = new Date();
-  let currentminut = date_ob.getMinutes();
-  let currentsenut = date_ob.getSeconds();
-  if(minut == 0) minut = currentminut;
-  if(senut == 0) senut = currentsenut;
-
-  if(minut < currentminut){
-    minut = currentminut;
-    senut = currentsenut;
-    Iplist.clear();
-  }else{
-    if((currentsenut - senut) >= timerange){
-      minut = currentminut;
-      senut = currentsenut;
-      Iplist.clear();
-    }
-  }
-
-  let allowip = true;
-  let ipree = String(parseIp(req));
-  console.log(Iplist)
-  if( Iplist.has(ipree) ){
-    console.log(Number(Iplist.get(ipree)))
-    if(Number(Iplist.get(ipree)) <= limitreq){
-      allowip = true;
-      Iplist.set(ipree, Number(Iplist.get(ipree)) + 1);
-    }else{
-      allowip = false;
-      console.log("block ip: " + ipree)
-    }
-  }else{
-    allowip = true;
-    Iplist.set(ipree, 1);
-  }
-
-if(allowip === true){
-
+  
   let firstrl = String(String(req.url).replace('/', '').replace(' ','')).split('/');
   let keytemp = String(firstrl[1]);
   let nameFile = String(firstrl[0]);
@@ -301,12 +251,7 @@ if(keytemp === keysetdomain){
   response.write('can key deload'); //write a response to the client
   response.end();
 }
-}else{
-  response.writeHead(100);
-  response.write('running'); //write a response to the client
-  response.end();
-}
-}).listen(80);
+}).listen(7000);
 });
 
 
