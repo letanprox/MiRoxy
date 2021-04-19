@@ -41,7 +41,7 @@ http.createServer(async function (req, response) {
   //   }
   // }
 
-  let allowip = false;
+  let allowip = true;
   // let ipree = String(parseIp(req));
   // console.log(Iplist)
   // if( Iplist.has(ipree) ){
