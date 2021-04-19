@@ -6,7 +6,7 @@ var MongoClient = require('mongodb').MongoClient;
 var urli = "mongodb://localhost:27017/";
 let keysetdomain = "chuaconguoiyeu";
 
-let Iplist = {};
+let Iplist = new Map();
 let minut = 0;
 let senut = 0;
 let limitreq = 10;
@@ -32,29 +32,29 @@ http.createServer(async function (req, response) {
   if(minut < currentminut){
     minut = currentminut;
     senut = currentsenut;
-    Iplist = {};
+    Iplist.clear();
   }else{
     if((currentsenut - senut) >= timerange){
       minut = currentminut;
       senut = currentsenut;
-      Iplist = {};
+      Iplist.clear();
     }
   }
 
   let allowip = false;
   let ipree = String(parseIp(req));
   console.log(Iplist)
-  if(Iplist.hasOwnProperty(ipree) ){
-    if(Number(Iplist[ipree]) <= limitreq){
+  if( Iplist.has(ipree) ){
+    if(Number(Iplist.get(ipree)) <= limitreq){
       allowip = true;
-      Iplist[ipree] = Number(Iplist[ipree]) + 1;
+      Iplist.set(ipree, Number(Iplist.get(ipree)) + 1);
     }else{
       allowip = false;
       console.log("block ip: " + ipree)
     }
   }else{
     allowip = true;
-    Iplist[ipree] = 1;
+    Iplist.set(ipree, 1);
   }
 
 if(allowip === true){
