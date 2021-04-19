@@ -1,6 +1,7 @@
 const http = require("http");
 const fs = require("fs");
 const {google} = require('googleapis');
+const chalk = require('chalk');
 
 var MongoClient = require('mongodb').MongoClient;
 var urli = "mongodb://localhost:27017/";
@@ -50,7 +51,7 @@ if(keytemp === keysetdomain){
   }
 
   if(ischose > 0){
-    console.log("\x1b[33m",nameFile," + get");
+    console.log(chalk.yellow(nameFile," + get"));
     
     response.writeHead( 200, { 
       'Content-Type': 'multipart/form-data' ,
@@ -86,7 +87,7 @@ if(keytemp === keysetdomain){
       }
 
       if(statsfile == 0){
-        console.log("\x1b[31m",nameFile," + getnextfile");
+        console.log(chalk.green(nameFile," + getnextfile"));
         dbo = await db.db("aidb");
         dbo = await dbo.collection("danh_sach_drivelist");
           query = { name:nameId};
@@ -131,7 +132,7 @@ if(keytemp === keysetdomain){
     }
 
   }else{
-    console.log("\x1b[31m",nameFile," + create");
+    console.log(chalk.green(nameFile," + create"));
 
     dbo = await db.db("aidb");
     dbo = await dbo.collection("danh_sach_drivelist");
